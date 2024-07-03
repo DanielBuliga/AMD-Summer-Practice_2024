@@ -78,7 +78,12 @@ module test;
                 b = at;
                 #10
                 rez = o;
-                bt = bt - 1; 
+
+                op=4'b0001;
+                a = bt;
+                b = 1;
+                #10
+                bt = o;
             end
         
             $display("Rezultat = %0d", rez);
