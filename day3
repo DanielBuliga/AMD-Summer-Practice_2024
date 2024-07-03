@@ -1,0 +1,66 @@
+module divizor_tensiune(din,clk,pl,en,clk_out);
+    input [15:0] din;
+    input clk,pl,en;
+    output reg clk_out;
+    
+    reg [15:0] data, aux, mem;
+    reg pos = 0;
+    
+    always  @(clk)
+    begin
+        if(en)
+        begin
+            if(pl)
+            begin
+                data <=  din;
+                aux <= din;
+                    if(pos)
+                        begin
+                            clk_out <= 1;
+                            data = data - 1;
+                            if(data == 0)
+                                pos=1;
+                        end
+                        
+                        if(~pos)
+                        begin
+                            clk_out = 0;
+                            data = data + 1;
+                            if(data == aux)
+                                pos=0;
+                        end
+                        
+             end
+        end
+   end    
+endmodule
+
+
+module test;
+    reg [15:0] din;
+    reg clk,pl,en;
+    wire clk_out;
+    
+    
+    divizor_tensiune dt(din,clk,pl,en,clk_out);
+    
+    initial
+    begin
+        #0 clk=1'b0;
+        forever #5 clk=~clk;
+    end
+    
+    
+    initial 
+    begin   
+        #0 din=16'b0; pl=0; en=0;
+        #10 din=16'b0000_0000_0000_0011; pl=1; en=1;
+        #10 pl=0;
+        #10 en=0;
+        #10 pl=1;
+        #10 en=1;
+    end
+    
+    initial
+        #180 $finish; 
+endmodule
