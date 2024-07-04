@@ -64,3 +64,108 @@ module test;
     initial
         #180 $finish; 
 endmodule
+
+// Modificare
+
+module divizor_frecventa(din,clk,pl,en,clk_out); //,mem, data);
+    input [15:0] din;
+    input clk,pl,en;
+    output reg clk_out;
+    //output reg [15:0] mem, data;
+    
+    reg [15:0] mem, data, aux;
+    reg pos = 0;
+    //reg cnt = 0; 
+    
+
+    
+    always @(posedge clk) 
+    begin
+    
+        if(pl)
+        begin
+                    data <= din;
+                    aux <= din;
+                    mem <= din;
+        end
+        
+        //else
+            //begin
+               //data <= mem; 
+            //end
+         
+         
+        else
+           
+        if(en)
+        begin
+                    if(pos == 1)
+                        begin
+                            clk_out <= 1;
+                            data = data - 1;
+                            //mem = data;
+                            
+                            if(data == 0)
+                            begin
+                                pos <= 0;
+                                data <= aux;
+                            end
+                        end
+                        
+                      else
+                        begin
+                            clk_out = 0;
+                            data = data - 1;
+                            //mem = data;
+                            
+                            if(data == 0)                   
+                            begin
+                                pos <= 1;
+                                data <= aux;
+                            end
+                        end
+                       
+        end
+ 
+   end
+     
+endmodule
+
+
+module test;
+    reg [15:0] din;
+    reg clk,pl,en;
+    wire clk_out;
+    //wire [15:0] mem, data;
+    
+    
+    divizor_frecventa dt(din,clk,pl,en,clk_out); //,mem,data);
+    
+    initial
+    begin
+        #0 clk=1'b0;
+        forever #5 clk=~clk;
+    end
+    
+    
+    initial 
+    begin 
+
+        #0 din=16'b0; pl=0; en=0;
+        #10 din=16'b0000_0000_0000_0011; pl=1; en=1;
+        #10 pl=0;
+        #100 en=1;
+        #10 en=1;
+        #10 pl=0;
+        #5 pl=1;
+        #20 en=1;
+        #10 pl=0;
+ 
+    end
+    
+    initial
+        #300 $finish; 
+          
+    
+endmodule
+
