@@ -1,0 +1,274 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 08.07.2024 11:12:10
+// Design Name: 
+// Module Name: digit_dec
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+/*
+
+module reg_param(clk, reset, pl, din, dout);
+parameter WIDTH = 4;
+input clk, reset, pl;
+input [WIDTH-1:0] din;
+output reg [WIDTH-1:0] dout;
+always @(posedge clk)
+if(reset)
+    dout<=0;
+else
+    if(pl)
+        dout<=din;
+endmodule
+
+module alu(a, b, o, op, of, uf,  err, zero);
+    parameter N = 4;
+    input [N-1:0] a,b;
+    input [3:0] op;
+    
+    output reg [N-1:0] o;
+    output reg of, uf, err, zero;
+    
+    
+    always @(a or b or op)
+    begin
+        of <= 0;
+        uf <= 0;
+        err <= 0;
+        zero <= 0;
+        
+        casex(op)
+            4'b0000: {of,o} <= a + b;
+            4'b0001: {uf,o} <= a - b;
+            4'b0010: o <= a << b;
+            4'b0011: o <= a >> b;
+            4'b0100: zero <= a==b;
+            4'b0101: zero <= a > b;
+            4'b0110: zero <= a < b;
+            4'b0111, 4'b1xxx: err <= 1;
+        
+        endcase
+    
+    end
+    
+endmodule
+
+
+module mux_param_behavioral(in1, in2, sel, out);
+    parameter N=8;
+    
+    input [N-1:0] in1;
+    input [N-1:0] in2;
+    input sel;
+    
+    output reg [N-1:0] out;
+    
+    always @ (in1 or in2 or sel)
+    begin
+        if(!sel)
+        begin
+            out <= in1;
+        end
+        
+        if(sel)
+        begin
+            out <= in2;
+        end 
+    end  
+     
+endmodule
+
+*/
+
+
+module divizor(clk, clk_out);
+    input clk;
+    output reg clk_out;
+    
+    parameter d = 138_875; //2; //138_875;
+    
+    reg [31:0] cnt;
+    
+    always @(posedge clk)
+    begin
+        if(cnt >= d - 1)
+            begin
+                cnt = 0;
+                clk_out = ~clk_out;
+            end
+        else
+            cnt = cnt + 1;
+    end
+    
+endmodule
+
+
+module digit_dec(din,a,b,c,d,e,f,g);
+    input [3:0] din;
+    output reg  a,b,c,d,e,f,g;
+    
+    always @(din)
+    begin
+        case(din)
+            4'b1010: {a,b,c,d,e,f,g} = ~7'b1110111;
+            4'b1011: {a,b,c,d,e,f,g} = ~7'b0011111;
+            4'b1100: {a,b,c,d,e,f,g} = ~7'b1001110;
+            4'b1101: {a,b,c,d,e,f,g} = ~7'b0111101;
+            4'b1110: {a,b,c,d,e,f,g} = ~7'b1001111;
+            4'b1111: {a,b,c,d,e,f,g} = ~7'b1000111;
+        
+            4'b0000: {a,b,c,d,e,f,g} = ~7'b1111110;
+            4'b0001: {a,b,c,d,e,f,g} = ~7'b0110000;
+            4'b0010: {a,b,c,d,e,f,g} = ~7'b1101101;
+            4'b0011: {a,b,c,d,e,f,g} = ~7'b1111001;
+            4'b0100: {a,b,c,d,e,f,g} = ~7'b0110011;
+            4'b0101: {a,b,c,d,e,f,g} = ~7'b1011011;
+            4'b0110: {a,b,c,d,e,f,g} = ~7'b1011111;
+            4'b0111: {a,b,c,d,e,f,g} = ~7'b1110000;
+            4'b1000: {a,b,c,d,e,f,g} = ~7'b1111111;
+            4'b1001: {a,b,c,d,e,f,g} = ~7'b1111011;
+             
+        endcase
+        //dout <= ~dout;
+    end
+endmodule
+            
+/*            
+module test;
+    reg [3:0] din;      
+    wire [6:0] dout;
+    
+    digit_dec dd(din, dout);
+    
+    initial 
+    begin
+        #0 din=0;
+        #10 din=4'b0011;
+        #10 din=4'b1010;
+        #10 din=4'b1111;
+        #50 $finish;
+    end
+   
+endmodule      
+*/
+
+module decod(ain, aout);
+    input [1:0] ain;
+    output reg [3:0] aout;
+    
+    always @(ain)
+    begin
+        case(ain)
+            2'b00: aout = ~4'b0001;
+            2'b01: aout = ~4'b0010;
+            2'b10: aout = ~4'b0100;
+            2'b11: aout = ~4'b1000;
+        endcase
+    end
+    
+endmodule    
+
+
+module mux(in,out,sel);
+    input [15:0] in;
+    input [1:0] sel;
+    output reg [3:0] out;
+    
+    always @(in or sel)
+    begin
+        case(sel)
+            2'b00: out = in[3:0];
+            2'b01: out = in[7:4];
+            2'b10: out = in[11:8];
+            2'b11: out = in[15:12];
+        endcase
+    end
+   
+endmodule 
+
+
+module cnt(clk,out);
+    input clk;
+    output reg [1:0] out;    
+    
+    always @(posedge clk)
+    begin
+  
+        if(out < 2'b11)
+            out = out + 1;
+        else
+            out = 2'b00;
+         
+    end
+    
+endmodule 
+
+
+module top(clk, in, a,b,c,d,e,f,g, A); //, out_dec, cnt_out);
+    input [15:0] in;
+    input clk;
+    output a,b,c,d,e,f,g;
+    output [3:0] A;
+    
+    wire [1:0] cnt_out;
+    wire [3:0] mux_out;
+    wire div_out;
+    
+    /*
+    reg [15:0] in;
+    reg clk;
+    wire [6:0] out_dig;
+    wire [3:0] out_dec;
+    
+    wire [1:0] cnt_out;
+    wire [3:0] mux_out;
+    */
+    divizor div(clk, div_out);
+    cnt count(div_out, cnt_out);
+    mux m(in, mux_out, cnt_out);
+    digit_dec dd(mux_out,a,b,c,d,e,f,g);
+    decod dec(cnt_out, A);
+    
+    
+
+endmodule
+
+/*
+module top_tb;
+    reg [15:0] in;
+    reg clk;
+    wire [6:0] out_dig;
+    wire [3:0] out_dec;
+    wire [1:0] cnt_out;
+    
+    top t(in, clk, out_dig, out_dec, cnt_out);
+    
+    initial
+    begin 
+        clk = 0;
+        forever #5 clk = ~clk;
+    end
+    
+    initial
+    begin
+        #0 clk=0; in=0;
+        #10 in='b0000_1000_0001_1000;
+        #50
+        #100 $finish;
+    end
+
+endmodule
+*/
