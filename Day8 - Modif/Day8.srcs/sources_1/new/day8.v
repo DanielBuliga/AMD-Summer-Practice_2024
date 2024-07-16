@@ -368,34 +368,8 @@ module test;
     
     initial
     begin   
-        // Initialize Inputs
         clk = 0;
-        //pc_out = 0;
-
-        // Wait for the global reset
         #100;
-        
-        // Apply different test cases
-        $display("Starting test cases...");
-        
-        // Test case 1: Addi
-        // Instruction: addi $t0, $t0, 10
-        //pc_out = 0;
-        #10;
-        $display("Instruction at PC=0: %h", im_out);
-        
-        // Test case 2: LW
-        // Instruction: lw $t1, 0($t0)
-        //pc_out = 4;
-        #10;
-        $display("Instruction at PC=4: %h", im_out);
-
-        // Test case 3: SW
-        // Instruction: sw $t1, 4($t0)
-       // pc_out = 8;
-        #10;
-        $display("Instruction at PC=8: %h", im_out);
-     
     end
 
 endmodule
