@@ -1,0 +1,11 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/training/Day8/Day8.srcs/sources_1/new/day8.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module reg_pc
+INFO: [VRFC 10-311] analyzing module alu_sum
+INFO: [VRFC 10-311] analyzing module im
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-311] analyzing module mux2_1
+INFO: [VRFC 10-311] analyzing module ext_sign
+INFO: [VRFC 10-311] analyzing module register_bank
+INFO: [VRFC 10-311] analyzing module dm
+INFO: [VRFC 10-311] analyzing module main_control
+INFO: [VRFC 10-311] analyzing module tb
